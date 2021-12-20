@@ -2,6 +2,7 @@
   <div>
     <IndexAnimation />
     <Header background="transparent" />
+    <Footer fixed />
     <div class="common">
       <div class="home">
         <p>{{ info.introduction }}</p>
@@ -11,8 +12,9 @@
 </template>
 
 <script>
-import Header from "@/components/Header";
 import IndexAnimation from "@/components/IndexAnimation";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 let i = 0;
 let timer = null;
@@ -21,6 +23,7 @@ export default {
   components: {
     IndexAnimation,
     Header,
+    Footer,
   },
   data() {
     return {
