@@ -1,15 +1,17 @@
 <template>
   <div>
-    <IndexAnimation></IndexAnimation>
+    <IndexAnimation />
+    <Header background="transparent" />
     <div class="common">
       <div class="home">
-        <p>{{ info }}</p>
+        <p>{{ info.introduction }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Header from "@/components/Header";
 import IndexAnimation from "@/components/IndexAnimation";
 
 let i = 0;
@@ -18,6 +20,7 @@ export default {
   name: "Index",
   components: {
     IndexAnimation,
+    Header,
   },
   data() {
     return {
