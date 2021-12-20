@@ -3,7 +3,7 @@
     <IndexAnimation></IndexAnimation>
     <div class="common">
       <div class="home">
-        <p>{{ info.introduction }}</p>
+        <p>{{ info }}</p>
       </div>
     </div>
   </div>
