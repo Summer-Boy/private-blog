@@ -6,12 +6,26 @@ import "muse-ui/dist/muse-ui.css";
 import "./global.less";
 import "lib-flexible";
 import { isPC } from "@/utils";
+import VueLazyload from "vue-lazyload";
+import * as filters from "./filter";
+import Helpers from "muse-ui/lib/Helpers";
 
-Vue.use(MuseUI);
+//注册过滤器
+Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]));
+Vue.prototype.filterDate = filters.filterDate;
 
 Vue.config.productionTip = false;
-
 Vue.prototype.isPC = isPC;
+Vue.prototype.avatar = require("./assets/index.jpg");
+
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  error: require("./assets/loading.gif"),
+  loading: require("./assets/loading.gif"),
+  attempt: 1,
+});
+Vue.use(MuseUI);
+Vue.use(Helpers);
 
 new Vue({
   router,

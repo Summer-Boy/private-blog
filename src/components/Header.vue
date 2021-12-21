@@ -9,6 +9,7 @@
       <mu-button
         v-show="isPC"
         slot="right"
+        @click="go(item)"
         v-for="(item, index) in info.menu"
         :color="lightIndex === index ? '#00e676' : ''"
         :key="item.name"
@@ -83,10 +84,100 @@
         </mu-list>
       </mu-popover>
     </mu-appbar>
+
+    <!-- 搜索按钮 -->
+    <div class="tool" v-if="isShowAction">
+      <!-- 如果用户已经登录了那就不展示登录和注册按钮 !user 控制 -->
+      <div v-if="info.login && !user" class="tool-row">
+        <mu-slide-left-transition>
+          <mu-button
+            v-show="showToolBtn"
+            @click="
+              openLoginModal = true;
+              showToolBtn = false;
+            "
+            fab
+            color="primary"
+            >登录</mu-button
+          >
+        </mu-slide-left-transition>
+      </div>
+      <div class="tool-row">
+        <mu-tooltip placement="right-start" content="登录/注册/搜索">
+          <mu-button
+            @click="showToolBtn = !showToolBtn"
+            fab
+            color="info"
+            class="search-fab"
+          >
+            <mu-icon value="adb"></mu-icon>
+          </mu-button>
+        </mu-tooltip>
+
+        <mu-slide-left-transition>
+          <mu-button
+            v-show="showToolBtn && info.openSearch"
+            @click="
+              openSearchModal = true;
+              showToolBtn = false;
+            "
+            fab
+            color="error"
+            >搜索</mu-button
+          >
+        </mu-slide-left-transition>
+      </div>
+
+      <!-- 如果用户已经登录了那就不展示登录和注册按钮 !user 控制 -->
+      <div v-if="info.register && !user" class="tool-row">
+        <mu-slide-left-transition>
+          <mu-button
+            v-show="showToolBtn"
+            @click="
+              openRegisterModal = true;
+              showToolBtn = false;
+            "
+            fab
+            color="warning"
+            >注册</mu-button
+          >
+        </mu-slide-left-transition>
+      </div>
+    </div>
+
+    <RegisterForm
+      :open="openRegisterModal"
+      @toggle="toggleRegisterModal"
+    ></RegisterForm>
+
+    <LoginForm :open="openLoginModal" @toggle="toggleLoginModal"></LoginForm>
+
+    <SearchForm
+      :open="openSearchModal"
+      @toggle="toggleSearchModal"
+    ></SearchForm>
+
+    <mu-slide-bottom-transition>
+      <mu-tooltip placement="top" content="Top">
+        <mu-button
+          class="back-top"
+          v-show="showBackTop"
+          @click="scrollTop"
+          fab
+          color="secondary"
+        >
+          <mu-icon value="arrow_upward"></mu-icon>
+        </mu-button>
+      </mu-tooltip>
+    </mu-slide-bottom-transition>
   </div>
 </template>
 
 <script>
+import RegisterForm from "@/components/RegisterForm";
+import LoginForm from "@/components/LoginForm";
+import SearchForm from "@/components/SearchForm";
+
 const menus = [
   {
     name: "首页",
@@ -130,6 +221,11 @@ export default {
       type: String,
     },
   },
+  components: {
+    RegisterForm,
+    LoginForm,
+    SearchForm,
+  },
   data() {
     return {
       openUser: false,
@@ -139,12 +235,38 @@ export default {
       triggerTheme: null,
       info: {
         menu: menus,
+        login: true, // 是否开启登录
+        openSearch: true, // 是否开启搜索
+        register: true, // 是否开启注册
       },
+      showToolBtn: false, // 点击切换显示操作按钮
+      user: JSON.parse(localStorage.getItem("user")), // 用户信息
+      openSearchModal: false, // 打开搜索弹框
+      openLoginModal: false, // 打开登录弹框
+      openRegisterModal: false, // 打开注册弹框
+      showBackTop: false,
     };
   },
   mounted() {
     this.trigger = this.$refs.button.$el;
     this.triggerTheme = this.$refs.theme.$el;
+
+    window.onscroll = () => {
+      if (document.documentElement.scrollTop + document.body.scrollTop > 100) {
+        this.showBackTop = true;
+      } else {
+        this.showBackTop = false;
+      }
+    };
+  },
+  computed: {
+    isShowAction() {
+      return !(
+        !this.info.openSearch &&
+        !this.info.register &&
+        !this.info.login
+      );
+    },
   },
   methods: {
     toggleWapMenu(openWapMenu) {
@@ -157,6 +279,18 @@ export default {
         name: item.router,
       });
     },
+    toggleRegisterModal(bool) {
+      this.openRegisterModal = bool;
+    },
+    toggleLoginModal(bool) {
+      this.openLoginModal = bool;
+    },
+    toggleSearchModal(bool) {
+      this.openSearchModal = bool;
+    },
+    scrollTop() {
+      document.body.scrollIntoView({ block: "start", behavior: "smooth" });
+    },
   },
 };
 </script>
@@ -168,12 +302,10 @@ export default {
   width: 100%;
   top: 0;
 }
-
 .header-avatar {
   margin-left: 20px;
   cursor: pointer;
 }
-
 .mu-appbar {
   .mu-flat-button {
     flex: 1;
@@ -182,7 +314,6 @@ export default {
     flex: 1;
   }
 }
-
 .user {
   display: flex;
   justify-content: space-around;
@@ -196,5 +327,24 @@ export default {
     white-space: nowrap;
     text-align: right;
   }
+}
+.tool {
+  position: fixed;
+  left: 0;
+  bottom: 2.66667rem;
+  .tool-row {
+    margin-top: 20px;
+    height: 56px;
+    .search-fab {
+      margin-left: -28px;
+      margin-right: 20px;
+    }
+  }
+}
+.back-top {
+  position: fixed;
+  right: 0.26667rem;
+  bottom: 0.4rem;
+  background: #595959;
 }
 </style>

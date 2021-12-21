@@ -15,6 +15,46 @@ const routes = [
     name: "index",
     component: () => import("./views/Home/Index.vue"),
   },
+  {
+    path: "/archives",
+    name: "archives",
+    component: () => import("./views/Archives/Index.vue"),
+  },
+  {
+    path: "/categories",
+    name: "categories",
+    component: () => import("./views/Categories/Index.vue"),
+  },
+  {
+    path: "/categories/details",
+    name: "categoriesDetails",
+    component: () => import("./views/Categories/Details.vue"),
+  },
+  {
+    path: "/tags",
+    name: "tags",
+    component: () => import("./views/Tags/Index.vue"),
+  },
+  {
+    path: "/tags/details",
+    name: "tagsDetails",
+    component: () => import("./views/Tags/Details.vue"),
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: () => import("./views/About/Index.vue"),
+  },
+  {
+    path: "/articles",
+    name: "articles",
+    component: () => import("./views/Articles/Index.vue"),
+  },
+  {
+    path: "/articles",
+    name: "articlesDetails",
+    component: () => import("./views/Articles/Details.vue"),
+  },
 ];
 
 const router = new VueRouter({

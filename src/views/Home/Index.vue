@@ -1,6 +1,6 @@
 <template>
   <div>
-    <IndexAnimation />
+    <IndexAnimation style="display: none" />
     <Header background="transparent" />
     <Footer fixed />
     <div class="common">
