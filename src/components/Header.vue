@@ -57,11 +57,21 @@
       </mu-button>
       <mu-popover :open.sync="openTheme" :trigger="triggerTheme">
         <mu-list>
-          <mu-list-item button>
-            <mu-list-item-title>Light</mu-list-item-title>
+          <mu-list-item button @click="toggleTheme('selfLight')">
+            <mu-list-item-title>
+              <mu-icon
+                :color="me === 'selfLight' ? 'primary' : ''"
+                value="brightness_7"
+              ></mu-icon>
+            </mu-list-item-title>
           </mu-list-item>
-          <mu-list-item button>
-            <mu-list-item-title>Dark</mu-list-item-title>
+          <mu-list-item button @click="toggleTheme('selfDark')">
+            <mu-list-item-title>
+              <mu-icon
+                :color="me === 'selfDark' ? 'primary' : ''"
+                value="brightness_4"
+              ></mu-icon>
+            </mu-list-item-title>
           </mu-list-item>
         </mu-list>
       </mu-popover>
@@ -75,7 +85,7 @@
       </mu-button>
       <mu-popover :open.sync="openUser" :trigger="trigger">
         <mu-list>
-          <mu-list-item button>
+          <mu-list-item button @click="$router.push({ name: 'user' })">
             <mu-list-item-title>个人中心</mu-list-item-title>
           </mu-list-item>
           <mu-list-item button>
@@ -245,11 +255,14 @@ export default {
       openLoginModal: false, // 打开登录弹框
       openRegisterModal: false, // 打开注册弹框
       showBackTop: false,
+      me: "",
     };
   },
   mounted() {
     this.trigger = this.$refs.button.$el;
     this.triggerTheme = this.$refs.theme.$el;
+
+    this.me = localStorage.getItem("theme") || "selfLight";
 
     window.onscroll = () => {
       if (document.documentElement.scrollTop + document.body.scrollTop > 100) {
@@ -290,6 +303,12 @@ export default {
     },
     scrollTop() {
       document.body.scrollIntoView({ block: "start", behavior: "smooth" });
+    },
+    toggleTheme(me) {
+      this.theme.use(me);
+      this.me = me;
+      localStorage.setItem("theme", me);
+      this.openTheme = false;
     },
   },
 };
